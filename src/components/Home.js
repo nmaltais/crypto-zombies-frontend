@@ -1,8 +1,9 @@
 import { useWeb3React } from "@web3-react/core"
 import { injected } from "./wallet/Connectors"
+import CryptoZombies from "./CryptoZombies";
 
 export default function Home() {
-  const { active, account, library, connector, activate, deactivate } = useWeb3React()
+  const { active, account, activate, deactivate } = useWeb3React();
 
   async function connect() {
     try {
@@ -28,6 +29,7 @@ export default function Home() {
             <span>Connected with <b>{account}</b></span>
             <br/>
             <button onClick={disconnect}>Disconnect</button>
+            <CryptoZombies />
           </>
         : 
         <>
