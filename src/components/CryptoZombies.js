@@ -2,6 +2,7 @@
 import { useWeb3React } from '@web3-react/core';
 import { useState, useEffect, useRef} from 'react';
 import  {ABI, address} from './config.js';
+import Zombie from  './Zombie';
 
 function CryptoZombies() {
   const { account, library }  = useWeb3React();
@@ -36,13 +37,25 @@ function CryptoZombies() {
   //   return cryptoZombies.methods.zombieToOwner(id).call()
   // }
 
+  // let armyPics = army.map(zombie => <li><Zombie2 key={zombie.dna} dna={zombie.dna} /></li>);\
 
   return (
-    army.length ?
-    `Your army of zombies: ${JSON.stringify(army)}`
-    :
-    `You have no zombies`
+    <div>
+      {army.length ?
+        <div>
+          <h1>Your army:</h1>
+          <ul>{army.map(zombie => <li key={zombie.dna}><Zombie dna={zombie.dna} /></li>)}</ul>
+        </div>
+      :
+      `You have no zombies`}
+    </div>
   )
+  // return (
+  //   army.length ?
+  //   `Your army of zombies: ${JSON.stringify(army)}`
+  //   :
+  //   `You have no zombies`
+  // )
 }
 
 export default CryptoZombies;
