@@ -7,7 +7,15 @@ const lightTheme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          border: '2px solid #1976d2',
+          border: '2px solid #173a61',
+        },
+      },
+    },
+    MuiCardMedia: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#173a61',
+          borderBottom: '1px solid #173a61',
         },
       },
     },

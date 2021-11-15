@@ -4,7 +4,6 @@ import Web3 from "web3";
 import Home from "./components/Home";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import "./App.css";
 import LightTheme from "./components/themes/LightTheme";
 import DarkTheme from "./components/themes/DarkTheme";
 

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { ABI, address } from "./config.js";
 import { Typography, Button } from "@mui/material";
 import ZombieCard from "./ZombieCard.js";
+import Box from "@mui/material/Box";
 
 function CryptoZombies() {
   const { account, library } = useWeb3React();
@@ -64,27 +65,39 @@ function CryptoZombies() {
   // }
 
   const renderedArmy = army.map((zombie) => (
-    <div
-      key={zombie.dna}
-      style={{ display: "inline-block", marginRight: "20px" }}
-    >
+    <Box key={zombie.dna} sx={{ m: 2 }}>
       <ZombieCard zombie={zombie} />
-    </div>
+    </Box>
   ));
 
   return (
     <div>
-      {isFetchingArmy ? <Typography variant="h2">Loading...</Typography> : ""}
+      {isFetchingArmy ? (
+        <Typography variant="h2" align="center">
+          Loading...
+        </Typography>
+      ) : (
+        ""
+      )}
       {!isFetchingArmy && army.length ? (
         <div>
           <Typography
-            variant="h2"
+            variant="h3"
             align="center"
-            style={{ marginBottom: "5vh" }}
+            style={{ marginBottom: "5vh", textTransform: "uppercase" }}
           >
-            Your zombies
+            Your troops
           </Typography>
-          <div>{renderedArmy}</div>
+
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            {renderedArmy}
+          </Box>
         </div>
       ) : (
         ""

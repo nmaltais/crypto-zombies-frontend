@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import "./Zombie.css";
 import Zombie from "./Zombie";
 import React from 'react';
-import { Card, CardActionArea, CardContent, Typography, CardActions } from '@mui/material';
+import { Card, CardActionArea, CardContent, Typography, CardActions, CardMedia } from '@mui/material';
 
 const ZombieCard = (props) => {
   const { zombie } = props;
@@ -10,7 +10,9 @@ const ZombieCard = (props) => {
   return (
     <Card>
     <CardActionArea>
-      <Zombie dna={zombie.dna} />
+      <CardMedia>
+        <Zombie dna={zombie.dna} />
+      </CardMedia>
       <CardContent>
         <Typography gutterBottom variant="h5" component="h2">
           {zombie.name}
@@ -30,10 +32,10 @@ const ZombieCard = (props) => {
     </CardActionArea>
     <CardActions>
       <Button size="small" color="primary">
-        Share
+        Level Up
       </Button>
       <Button size="small" color="primary">
-        Learn More
+        Attack
       </Button>
     </CardActions>
     </Card>
