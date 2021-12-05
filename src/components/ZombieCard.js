@@ -5,10 +5,10 @@ import React from 'react';
 import { Card, CardActionArea, CardContent, Typography, CardActions, CardMedia } from '@mui/material';
 
 const ZombieCard = (props) => {
-  const { zombie } = props;
+  const { zombie, levelUp } = props;
 
   return (
-    <Card>
+    <Card style={{backgroundColor: zombie.inTransaction ? 'red' : ''}}>
     <CardActionArea>
       <CardMedia>
         <Zombie dna={zombie.dna} />
@@ -31,8 +31,10 @@ const ZombieCard = (props) => {
       </CardContent>
     </CardActionArea>
     <CardActions>
-      <Button size="small" color="primary">
-        Level Up
+      <Button size="small" color="primary" onClick={() => {
+        levelUp(zombie);
+        }}>
+        Level Up ($)
       </Button>
       <Button size="small" color="primary">
         Attack

@@ -20,19 +20,18 @@ function CryptoZombies() {
   refreshArmy.current = (account) => {
     setIsFetchingArmy(true);
     setArmy([]);
-    debugger;
-    getZombiesByOwner(account).then((zombies) => {
-      console.log({ zombies });
-      debugger;
-      zombies.forEach((zombie) => {
-        getZombieDetails(zombie).then((zombieDetails) => {
-          console.log(zombieDetails);
+    getZombiesByOwner(account).then((zombieIds) => {
+      console.log({ zombieIds });
+      zombieIds.forEach((zombieId) => {
+        getZombieDetails(zombieId).then((zombieDetails) => {
+          console.log({zombieDetails});
+          zombieDetails.id = zombieId;
+          zombieDetails.inTransaction = false;
           setArmy((prevArmy) => [...prevArmy, zombieDetails]);
           setIsFetchingArmy(false);
         });
       });
     });
-    debugger;
   };
 
   useEffect(() => {
@@ -63,10 +62,41 @@ function CryptoZombies() {
   // function zombieToOwner(id) {
   //   return cryptoZombies.methods.zombieToOwner(id).call()
   // }
+  function updateZombieAttributes(newZombieObj) {
+    setArmy((prevArmy) => {
+      return prevArmy.map(z => {
+        if(z.id === newZombieObj.id){
+          z = newZombieObj;
+        }
+        return z;
+      })
+    });
+  }
+
+  const levelUp = (zombie) => {
+    console.log('leveling up...');
+    updateZombieAttributes({...zombie, inTransaction: true});
+    return cryptoZombies.methods
+      .levelUp(zombie.id)
+      .send({ from: account, value: library.utils.toWei("0.001", "ether") })
+      .on("receipt", function (receipt) {
+        console.log({ receipt });
+        console.log("Successfully leveled up!");
+        // Transaction was accepted into the blockchain, let's redraw the UI
+        // refreshArmy.current(account);
+        updateZombieAttributes({...zombie, level: parseInt(zombie.level)+1, inTransaction: false});
+      })
+      .on("error", function (error) {
+        console.error({ error });
+        // Do something to alert the user their transaction has failed
+        console.log('failed');
+        updateZombieAttributes({...zombie, inTransaction: false});
+      });
+  }
 
   const renderedArmy = army.map((zombie) => (
     <Box key={zombie.dna} sx={{ m: 2 }}>
-      <ZombieCard zombie={zombie} />
+      <ZombieCard zombie={zombie} levelUp={levelUp} />
     </Box>
   ));
 
