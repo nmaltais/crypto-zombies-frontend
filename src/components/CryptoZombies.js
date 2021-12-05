@@ -4,6 +4,7 @@ import { ABI, address } from "./config.js";
 import { Typography, Button } from "@mui/material";
 import ZombieCard from "./ZombieCard.js";
 import Box from "@mui/material/Box";
+import status from "./ZombieStatus";
 
 function CryptoZombies() {
   const { account, library } = useWeb3React();
@@ -26,7 +27,7 @@ function CryptoZombies() {
         getZombieDetails(zombieId).then((zombieDetails) => {
           console.log({zombieDetails});
           zombieDetails.id = zombieId;
-          zombieDetails.inTransaction = false;
+          zombieDetails.status = status.READY;
           setArmy((prevArmy) => [...prevArmy, zombieDetails]);
           setIsFetchingArmy(false);
         });
@@ -75,7 +76,7 @@ function CryptoZombies() {
 
   const levelUp = (zombie) => {
     console.log('leveling up...');
-    updateZombieAttributes({...zombie, inTransaction: true});
+    updateZombieAttributes({...zombie, status: status.LEVELING_UP});
     return cryptoZombies.methods
       .levelUp(zombie.id)
       .send({ from: account, value: library.utils.toWei("0.001", "ether") })
@@ -83,19 +84,19 @@ function CryptoZombies() {
         console.log({ receipt });
         console.log("Successfully leveled up!");
         // Transaction was accepted into the blockchain, let's redraw the UI
-        updateZombieAttributes({...zombie, level: parseInt(zombie.level)+1, inTransaction: false});
+        updateZombieAttributes({...zombie, level: parseInt(zombie.level)+1, status: status.READY});
       })
       .on("error", function (error) {
         console.error({ error });
         // Do something to alert the user their transaction has failed
         console.log('failed');
-        updateZombieAttributes({...zombie, inTransaction: false});
+        updateZombieAttributes({...zombie, status: status.READY});
       });
   }
 
   const changeName = (zombie, newName) => {
     console.log('changing name...');
-    updateZombieAttributes({...zombie, inTransaction: true});
+    updateZombieAttributes({...zombie, status: status.CHANGING_NAME});
     return cryptoZombies.methods
       .changeName(zombie.id, newName)
       .send({ from: account })
@@ -103,18 +104,18 @@ function CryptoZombies() {
         console.log({ receipt });
         console.log("Successfully changed name!");
         // Transaction was accepted into the blockchain, let's redraw the UI
-        updateZombieAttributes({...zombie, name: newName, inTransaction: false});
+        updateZombieAttributes({...zombie, name: newName, status: status.READY});
       })
       .on("error", function (error) {
         console.error({ error });
         // Do something to alert the user their transaction has failed
         console.log('failed');
-        updateZombieAttributes({...zombie, inTransaction: false});
+        updateZombieAttributes({...zombie, status: status.READY});
       });
   }
 
   const attackRandomEnemyZombie = async (zombie) => {
-    updateZombieAttributes({...zombie, inTransaction: true});
+    updateZombieAttributes({...zombie, status: status.ATTACKING});
     // // Get total number of zombies
     // const numZombies = await cryptoZombies.methods.totalZombies.call((e, num) => {
     //   return num;
@@ -144,7 +145,7 @@ function CryptoZombies() {
       console.error({ error });
       // Do something to alert the user their transaction has failed
       console.log('failed');
-      updateZombieAttributes({...zombie, inTransaction: false});
+      updateZombieAttributes({...zombie, status: status.READY});
     });
   }
 

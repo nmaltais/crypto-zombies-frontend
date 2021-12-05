@@ -1,8 +1,5 @@
 import Button from "@mui/material/Button";
-import "./Zombie.css";
-import Zombie from "./Zombie";
-import React, { useState } from "react";
-import Countdown from "./Countdown";
+import { useState } from "react";
 import {
   Card,
   CardActionArea,
@@ -17,19 +14,98 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
 import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded";
+import UndoIcon from "@mui/icons-material/Undo";
+import "./Zombie.css";
+import Zombie from "./Zombie";
+import status from "./ZombieStatus";
+import Countdown from "./Countdown";
 
 const ZombieCard = (props) => {
   const { zombie, levelUp, changeName, attackRandomEnemyZombie } = props;
   const [isChangingName, setIsChangingName] = useState(false);
   const [zombieNameInput, setZombieNameInput] = useState(zombie.name);
 
+  const editNameBtn = (
+    <IconButton
+      disabled={zombie.status !== status.READY}
+      color="secondary"
+      edge="end"
+      size="small"
+      style={{ margin: "-1px 0px 0px 5px" }}
+      onClick={() => {
+        setIsChangingName(true);
+      }}
+    >
+      <EditIcon />
+    </IconButton>
+  );
+
+  const saveNameBtn = (
+    <IconButton
+      disabled={
+        !zombieNameInput.trim() ||
+        zombieNameInput.trim() === zombie.name ||
+        zombie.status !== status.READY
+      }
+      color="secondary"
+      edge="end"
+      size="small"
+      style={{ margin: "3px 0px 0px 5px" }}
+      onClick={async () => {
+        await changeName(zombie, zombieNameInput.trim());
+        setIsChangingName(false);
+      }}
+    >
+      <SaveTwoToneIcon />
+    </IconButton>
+  );
+
+  const undoNameChangeBtn = (
+    <IconButton
+      disabled={zombie.status !== status.READY}
+      color="secondary"
+      edge="end"
+      size="small"
+      style={{ margin: "3px 0px 0px 5px" }}
+      onClick={async () => {
+        setZombieNameInput(zombie.name);
+        setIsChangingName(false);
+      }}
+    >
+      <UndoIcon />
+    </IconButton>
+  );
+
   return (
-    <Card style={{ backgroundColor: zombie.inTransaction ? "red" : "" }}>
+    <Card>
       <CardActionArea>
         <CardMedia>
           <Zombie dna={zombie.dna} />
         </CardMedia>
         <CardContent>
+          {zombie.status !== status.READY ? (
+            <div
+              style={{
+                width: "100%",
+                height: "calc(100% - 33vh)",
+                backgroundColor: "black",
+                position: "absolute",
+                top: "33vh",
+                left: 0,
+                zIndex: 10,
+                opacity: 0.9,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography gutterBottom variant="h5" component="h2">
+                {zombie.status}
+              </Typography>
+            </div>
+          ) : (
+            ""
+          )}
           <Box
             sx={{
               display: "flex",
@@ -52,22 +128,10 @@ const ZombieCard = (props) => {
                   />
                 </Box>
                 <Box>
-                  <IconButton
-                    disabled={
-                      zombieNameInput.trim() === zombie.name ||
-                      zombie.inTransaction
-                    }
-                    color="secondary"
-                    edge="end"
-                    size="small"
-                    style={{ margin: "3px 0px 0px 5px" }}
-                    onClick={async () => {
-                      await changeName(zombie, zombieNameInput.trim());
-                      setIsChangingName(false);
-                    }}
-                  >
-                    <SaveTwoToneIcon />
-                  </IconButton>
+                  {!zombieNameInput.trim() ||
+                  zombieNameInput.trim() === zombie.name
+                    ? undoNameChangeBtn
+                    : saveNameBtn}
                 </Box>
               </>
             ) : (
@@ -77,28 +141,11 @@ const ZombieCard = (props) => {
                     {zombie.name}
                   </Typography>
                 </Box>
-                {zombie.level > 1 ? (
-                  <Box>
-                    <IconButton
-                      disabled={zombie.inTransaction}
-                      color="secondary"
-                      edge="end"
-                      size="small"
-                      style={{ margin: "-1px 0px 0px 5px" }}
-                      onClick={() => {
-                        setIsChangingName(true);
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </Box>
-                ) : (
-                  ""
-                )}
+                {zombie.level > 1 ? <Box>{editNameBtn}</Box> : ""}
               </>
             )}
           </Box>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography color="textSecondary" component="p">
             Level: {zombie.level}
             <br />
             DNA: {zombie.dna}
@@ -121,7 +168,7 @@ const ZombieCard = (props) => {
       </CardActionArea>
       <CardActions>
         <Button
-          disabled={zombie.inTransaction}
+          disabled={zombie.status !== status.READY}
           size="small"
           color="primary"
           onClick={() => {
@@ -135,7 +182,8 @@ const ZombieCard = (props) => {
         </Button>
         <Button
           disabled={
-            zombie.inTransaction || zombie.readyTime * 1000 > Date.now()
+            zombie.status !== status.READY ||
+            zombie.readyTime * 1000 > Date.now()
           }
           size="small"
           color="primary"
