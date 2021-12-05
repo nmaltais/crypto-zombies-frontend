@@ -83,8 +83,27 @@ function CryptoZombies() {
         console.log({ receipt });
         console.log("Successfully leveled up!");
         // Transaction was accepted into the blockchain, let's redraw the UI
-        // refreshArmy.current(account);
         updateZombieAttributes({...zombie, level: parseInt(zombie.level)+1, inTransaction: false});
+      })
+      .on("error", function (error) {
+        console.error({ error });
+        // Do something to alert the user their transaction has failed
+        console.log('failed');
+        updateZombieAttributes({...zombie, inTransaction: false});
+      });
+  }
+
+  const changeName = (zombie, newName) => {
+    console.log('changing name...');
+    updateZombieAttributes({...zombie, inTransaction: true});
+    return cryptoZombies.methods
+      .changeName(zombie.id, newName)
+      .send({ from: account })
+      .on("receipt", function (receipt) {
+        console.log({ receipt });
+        console.log("Successfully changed name!");
+        // Transaction was accepted into the blockchain, let's redraw the UI
+        updateZombieAttributes({...zombie, name: newName, inTransaction: false});
       })
       .on("error", function (error) {
         console.error({ error });
@@ -96,7 +115,7 @@ function CryptoZombies() {
 
   const renderedArmy = army.map((zombie) => (
     <Box key={zombie.dna} sx={{ m: 2 }}>
-      <ZombieCard zombie={zombie} levelUp={levelUp} />
+      <ZombieCard zombie={zombie} levelUp={levelUp} changeName={changeName} />
     </Box>
   ));
 
