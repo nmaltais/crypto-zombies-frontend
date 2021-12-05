@@ -113,9 +113,44 @@ function CryptoZombies() {
       });
   }
 
+  const attackRandomEnemyZombie = async (zombie) => {
+    updateZombieAttributes({...zombie, inTransaction: true});
+    // // Get total number of zombies
+    // const numZombies = await cryptoZombies.methods.totalZombies.call((e, num) => {
+    //   return num;
+    // });
+    // // Get a random zombie until the owner of that zombie is not the current user
+    // let targetZombieOwner = null;
+    let randZombieId = 3;//null;
+    // do {
+    //   randZombieId = Math.floor(Math.random() * numZombies);
+    //   targetZombieOwner = await cryptoZombies.methods.zombieToOwner(randZombieId).call((e, owner) => {
+    //     return owner;
+    //   });
+    // }
+    // while (targetZombieOwner === account);
+
+    // Attack that random enemy zombie
+    return cryptoZombies.methods
+    .attack(zombie.id, randZombieId)
+    .send({ from: account })
+    .on("receipt", function (receipt) {
+      console.log({ receipt });
+      console.log("Successfully attacked zombie!");
+      // Transaction was accepted into the blockchain, let's redraw the UI
+      refreshArmy.current(account);
+    })
+    .on("error", function (error) {
+      console.error({ error });
+      // Do something to alert the user their transaction has failed
+      console.log('failed');
+      updateZombieAttributes({...zombie, inTransaction: false});
+    });
+  }
+
   const renderedArmy = army.map((zombie) => (
     <Box key={zombie.dna} sx={{ m: 2 }}>
-      <ZombieCard zombie={zombie} levelUp={levelUp} changeName={changeName} />
+      <ZombieCard zombie={zombie} levelUp={levelUp} changeName={changeName} attackRandomEnemyZombie={attackRandomEnemyZombie} />
     </Box>
   ));
 

@@ -2,6 +2,7 @@ import Button from "@mui/material/Button";
 import "./Zombie.css";
 import Zombie from "./Zombie";
 import React, { useState } from "react";
+import Countdown from "./Countdown";
 import {
   Card,
   CardActionArea,
@@ -15,9 +16,10 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
+import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded";
 
 const ZombieCard = (props) => {
-  const { zombie, levelUp, changeName } = props;
+  const { zombie, levelUp, changeName, attackRandomEnemyZombie } = props;
   const [isChangingName, setIsChangingName] = useState(false);
   const [zombieNameInput, setZombieNameInput] = useState(zombie.name);
 
@@ -75,20 +77,24 @@ const ZombieCard = (props) => {
                     {zombie.name}
                   </Typography>
                 </Box>
-                <Box>
-                  <IconButton
-                    disabled={zombie.inTransaction}
-                    color="secondary"
-                    edge="end"
-                    size="small"
-                    style={{ margin: "-1px 0px 0px 5px" }}
-                    onClick={() => {
-                      setIsChangingName(true);
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Box>
+                {zombie.level > 1 ? (
+                  <Box>
+                    <IconButton
+                      disabled={zombie.inTransaction}
+                      color="secondary"
+                      edge="end"
+                      size="small"
+                      style={{ margin: "-1px 0px 0px 5px" }}
+                      onClick={() => {
+                        setIsChangingName(true);
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Box>
+                ) : (
+                  ""
+                )}
               </>
             )}
           </Box>
@@ -98,6 +104,14 @@ const ZombieCard = (props) => {
             DNA: {zombie.dna}
             <br />
             Ready Time: {zombie.readyTime}
+            <br />
+            Ready In:{" "}
+            <Countdown
+              targetTime={zombie.readyTime * 1000}
+              updateInterval={1000 * 60}
+            />
+            <br />
+            ID: {zombie.id}
             <br />
             Wins: {zombie.winCount}
             <br />
@@ -114,9 +128,21 @@ const ZombieCard = (props) => {
             levelUp(zombie);
           }}
         >
-          Level Up ($)
+          Level Up{" "}
+          <AttachMoneyRoundedIcon
+            style={{ fontSize: "20px", margin: "-1px 0px 0px 0px" }}
+          />
         </Button>
-        <Button disabled={zombie.inTransaction} size="small" color="primary">
+        <Button
+          disabled={
+            zombie.inTransaction || zombie.readyTime * 1000 > Date.now()
+          }
+          size="small"
+          color="primary"
+          onClick={() => {
+            attackRandomEnemyZombie(zombie);
+          }}
+        >
           Attack
         </Button>
       </CardActions>
