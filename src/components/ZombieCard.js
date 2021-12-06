@@ -13,7 +13,9 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveTwoToneIcon from "@mui/icons-material/SaveTwoTone";
-import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded";
+import LocalDiningIcon from "@mui/icons-material/LocalDining";
+import SellIcon from "@mui/icons-material/Sell";
+import LockClockIcon from "@mui/icons-material/LockClock";
 import UndoIcon from "@mui/icons-material/Undo";
 import "./Zombie.css";
 import Zombie from "./Zombie";
@@ -74,6 +76,68 @@ const ZombieCard = (props) => {
     >
       <UndoIcon />
     </IconButton>
+  );
+
+  const attackBtn = (
+    <Button
+      disabled={
+        zombie.status !== status.READY || zombie.readyTime * 1000 > Date.now()
+      }
+      size="small"
+      color="primary"
+      onClick={() => {
+        attackRandomEnemyZombie(zombie);
+      }}
+      endIcon={
+        zombie.readyTime * 1000 > Date.now() ? (
+          <Box
+            sx={{
+              display: "flex",
+              maxHeight: "20px",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+            }}
+          >
+            <LockClockIcon
+              style={{
+                margin: "4px 0px -2px 0px",
+                fontSize: "18px",
+              }}
+            />
+            <Typography
+              style={{
+                fontSize: "8px",
+                textTransform: "none",
+              }}
+            >
+              <Countdown
+                targetTime={zombie.readyTime * 1000}
+                updateInterval={1000 * 60}
+              />
+            </Typography>
+          </Box>
+        ) : (
+          <LocalDiningIcon />
+        )
+      }
+    >
+      Eat Brains
+    </Button>
+  );
+
+  const levelUpBtn = (
+    <Button
+      disabled={zombie.status !== status.READY}
+      size="small"
+      color="primary"
+      onClick={() => {
+        levelUp(zombie);
+      }}
+      endIcon={<SellIcon />}
+    >
+      Level Up
+    </Button>
   );
 
   return (
@@ -150,49 +214,15 @@ const ZombieCard = (props) => {
             <br />
             DNA: {zombie.dna}
             <br />
-            Ready Time: {zombie.readyTime}
-            <br />
-            Ready In:{" "}
-            <Countdown
-              targetTime={zombie.readyTime * 1000}
-              updateInterval={1000 * 60}
-            />
-            <br />
-            ID: {zombie.id}
-            <br />
             Wins: {zombie.winCount}
             <br />
             Losses: {zombie.lossCount}
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button
-          disabled={zombie.status !== status.READY}
-          size="small"
-          color="primary"
-          onClick={() => {
-            levelUp(zombie);
-          }}
-        >
-          Level Up{" "}
-          <AttachMoneyRoundedIcon
-            style={{ fontSize: "20px", margin: "-1px 0px 0px 0px" }}
-          />
-        </Button>
-        <Button
-          disabled={
-            zombie.status !== status.READY ||
-            zombie.readyTime * 1000 > Date.now()
-          }
-          size="small"
-          color="primary"
-          onClick={() => {
-            attackRandomEnemyZombie(zombie);
-          }}
-        >
-          Attack
-        </Button>
+      <CardActions sx={{ display: "flex", justifyContent: "space-between" }}>
+        {levelUpBtn}
+        {attackBtn}
       </CardActions>
     </Card>
   );

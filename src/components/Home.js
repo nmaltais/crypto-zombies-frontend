@@ -11,8 +11,8 @@ import {
   ToggleButton,
   Icon,
 } from "@mui/material";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 export default function Home(props) {
   const { toggleTheme } = props;
@@ -55,7 +55,7 @@ export default function Home(props) {
               title="Dark Mode"
               alt="Dark Mode"
             >
-              <Brightness4Icon />
+              <DarkModeIcon />
             </ToggleButton>
             <ToggleButton
               value="light"
@@ -63,7 +63,7 @@ export default function Home(props) {
               title="Light Mode"
               alt="Light Mode"
             >
-              <Brightness7Icon />
+              <LightModeIcon />
             </ToggleButton>
           </ToggleButtonGroup>
           {active ? (
