@@ -27,9 +27,18 @@ const ZombieCard = (props) => {
   const [isChangingName, setIsChangingName] = useState(false);
   const [zombieNameInput, setZombieNameInput] = useState(zombie.name);
 
+  const isCoolingDown = () => {
+    return zombie.readyTime * 1000 > Date.now();
+  };
+
   const editNameBtn = (
     <IconButton
-      disabled={zombie.status !== status.READY}
+      disabled={zombie.status !== status.READY || zombie.level < 2}
+      title={
+        zombie.level < 2
+          ? "This Zombie needs to reach level 2 before you can change its name."
+          : "Change this Zombie's name."
+      }
       color="secondary"
       edge="end"
       size="small"
@@ -49,6 +58,7 @@ const ZombieCard = (props) => {
         zombieNameInput.trim() === zombie.name ||
         zombie.status !== status.READY
       }
+      title="Save name change."
       color="secondary"
       edge="end"
       size="small"
@@ -65,6 +75,7 @@ const ZombieCard = (props) => {
   const undoNameChangeBtn = (
     <IconButton
       disabled={zombie.status !== status.READY}
+      title="Undo name change."
       color="secondary"
       edge="end"
       size="small"
@@ -80,16 +91,15 @@ const ZombieCard = (props) => {
 
   const attackBtn = (
     <Button
-      disabled={
-        zombie.status !== status.READY || zombie.readyTime * 1000 > Date.now()
-      }
+      disabled={zombie.status !== status.READY || isCoolingDown()}
+      title="Eat brains to contaminate people and grow your army."
       size="small"
       color="primary"
       onClick={() => {
         attackRandomEnemyZombie(zombie);
       }}
       endIcon={
-        zombie.readyTime * 1000 > Date.now() ? (
+        isCoolingDown() ? (
           <Box
             sx={{
               display: "flex",
@@ -129,6 +139,7 @@ const ZombieCard = (props) => {
   const levelUpBtn = (
     <Button
       disabled={zombie.status !== status.READY}
+      title="Level up this Zombie for a fee."
       size="small"
       color="primary"
       onClick={() => {
@@ -205,7 +216,7 @@ const ZombieCard = (props) => {
                     {zombie.name}
                   </Typography>
                 </Box>
-                {zombie.level > 1 ? <Box>{editNameBtn}</Box> : ""}
+                <Box>{editNameBtn}</Box>
               </>
             )}
           </Box>
