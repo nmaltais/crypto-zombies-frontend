@@ -62,87 +62,87 @@ const Zombie = (props) => {
         />
 
         <img
-          className="left-forearm"
+          className="left-forearm delayedIdle"
           src="./img/zombieparts/left-forearm-1@2x.png"
           style={getColor(skinColor)}
           alt=""
         />
         <img
-          className="right-forearm"
+          className="right-forearm delayedIdle"
           src="./img/zombieparts/right-forearm-1@2x.png"
           style={getColor(skinColor)}
           alt=""
         />
 
         <img
-          className="right-upper-arm"
+          className="right-upper-arm delayedIdle"
           src="./img/zombieparts/right-upper-arm-1@2x.png"
           style={getColor(skinColor)}
           alt=""
         />
 
         <img
-          className="torso"
+          className="torso delayedIdle"
           src="./img/zombieparts/torso-1@2x.png"
           style={getColor(skinColor)}
           alt=""
         />
 
         <img
-          className="shirt"
+          className="shirt delayedIdle"
           src={`./img/zombieparts/shirt-${shirtType}@2x.png`}
           style={getColor(clothesColor)}
           alt=""
         />
 
         <img
-          className="left-upper-arm"
+          className="left-upper-arm delayedIdle"
           src="./img/zombieparts/left-upper-arm-1@2x.png"
           style={getColor(skinColor)}
           alt=""
         />
 
         <img
-          className="left-forearm"
+          className="left-forearm delayedIdle"
           src="./img/zombieparts/left-forearm-1@2x.png"
           style={getColor(skinColor)}
           alt=""
         />
         <img
-          className="right-forearm"
+          className="right-forearm delayedIdle"
           src="./img/zombieparts/right-forearm-1@2x.png"
           style={getColor(skinColor)}
           alt=""
         />
 
         <img
-          className="left-hand"
+          className="left-hand delayedIdle"
           src="./img/zombieparts/hand1-1@2x.png"
           style={getColor(skinColor)}
           alt=""
         />
         <img
-          className="right-hand"
+          className="right-hand delayedIdle"
           src="./img/zombieparts/hand-2-1@2x.png"
           style={getColor(skinColor)}
           alt=""
         />
 
         <img
-          className="head head-part-1"
+          className="head head-part-1 idle"
           src={`./img/zombieparts/head-${hatType}@2x.png`}
           style={getColor(skinColor)}
           alt=""
         />
         <img
-          className="eye"
+          className="eye idle"
           src={`./img/zombieparts/eyes-${eyeType}@2x.png`}
           style={getColor(eyeColor)}
           alt=""
         />
 
         <img
-          className="mouth"
+          className="mouth idle"
           src="./img/zombieparts/mouth-1@2x.png"
           style={getColor(eyeColor)}
           alt=""

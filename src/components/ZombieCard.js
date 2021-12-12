@@ -152,9 +152,9 @@ const ZombieCard = (props) => {
   );
 
   return (
-    <Card>
-      <CardActionArea>
-        <CardMedia>
+    <Card style={{overflow: 'visible'}}>
+      <CardActionArea style={{overflow: 'visible'}}>
+        <CardMedia style={{overflow: 'visible'}}>
           <Zombie dna={zombie.dna} />
         </CardMedia>
         <CardContent>

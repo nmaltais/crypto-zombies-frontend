@@ -29,6 +29,18 @@
 .zombie-battle-component .zombie-parts {
   margin-left: -1vh;
 } */
+.idle {
+  animation: idleAnim 0.7s steps(24) infinite alternate; 
+  animation-timing-function: ease-in-out;
+  animation-delay: 0.1s;
+}
+.delayedIdle {
+  animation: idleAnim 0.7s steps(24) infinite alternate; 
+  animation-timing-function: ease-in-out;
+}
+@keyframes idleAnim {
+  100% { margin-top: -0.7vh; }
+}
 .zombie-parts .head {
   width: 28vh;
   position: absolute;
